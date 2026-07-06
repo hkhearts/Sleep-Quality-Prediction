@@ -1,0 +1,19 @@
+
+==================================================
+PSQI SLEEP QUALITY REPORT
+==================================================
+Patient Name: Harini
+Date of Test: 2026-06-29 19:40:17
+--------------------------------------------------
+COMPONENT SCORES:
+C1 (Subjective Quality):  2
+C2 (Sleep Latency):       2
+C3 (Sleep Duration):      0
+C4 (Sleep Efficiency):    3
+C5 (Sleep Disturbances):  2
+C6 (Use of Meds):         0
+C7 (Daytime Dysfunction): 1
+--------------------------------------------------
+GLOBAL PSQI SCORE: 10
+DIAGNOSIS: Poor Sleep Quality
+==================================================

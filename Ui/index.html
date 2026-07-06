@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronoDream - Sleep Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4E56C0 0%, #9B5DE0 50%, #D78FEE 75%, #FDCFFA 100%);
+            color: white;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+        .watch-face {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        .watch-hand {
+            transform-origin: bottom center;
+        }
+        .input-circle {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .input-circle:hover {
+            transform: scale(1.1);
+        }
+        .sleep-factor {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 16px;
+        }
+        .good-bad-indicator {
+            width: 200px;
+            height: 200px;
+            background: conic-gradient(from 0deg, #4ade80 0%, #4ade80 50%, #f87171 50%, #f87171 100%);
+        }
+        .page {
+            min-height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Page 1 - Watch Center -->
+    <section id="page1" class="page flex items-center justify-center">
+        <div class="watch-face rounded-full w-64 h-64 md:w-80 md:h-80 relative flex items-center justify-center shadow-2xl">
+            <div class="absolute w-1 h-20 bg-white watch-hand" id="hour-hand"></div>
+            <div class="absolute w-0.5 h-28 bg-white watch-hand" id="minute-hand"></div>
+            <div class="absolute w-0.5 h-32 bg-red-400 watch-hand" id="second-hand"></div>
+            <div class="absolute rounded-full w-4 h-4 bg-white z-10"></div>
+            <div class="absolute -bottom-16 text-center">
+                <h1 class="text-3xl font-bold">ChronoDream</h1>
+                <p class="opacity-80">Scroll down to track your sleep</p>
+                <i data-feather="chevron-down" class="animate-bounce mt-4 mx-auto"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Page 2 - Input Circles -->
+    <section id="page2" class="page flex items-center justify-center">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8" id="input-circles">
+                <!-- Input circles will be generated here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Page 3 - Results -->
+    <section id="page3" class="page flex items-center justify-center py-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full">
+                <!-- Left Column - Sleep Factors -->
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold mb-6">Sleep Factors</h2>
+                    <div class="sleep-factor p-6">
+                        <h3 class="font-semibold mb-2">Caffeine Intake</h3>
+                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-red-400" style="width: 75%"></div>
+                        </div>
+                        <p class="text-sm opacity-80 mt-1">High impact on sleep quality</p>
+                    </div>
+                    <div class="sleep-factor p-6">
+                        <h3 class="font-semibold mb-2">Screen Time</h3>
+                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-yellow-400" style="width: 60%"></div>
+                        </div>
+                        <p class="text-sm opacity-80 mt-1">Moderate impact on sleep</p>
+                    </div>
+                    <div class="sleep-factor p-6">
+                        <h3 class="font-semibold mb-2">Stress Level</h3>
+                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-400" style="width: 85%"></div>
+                        </div>
+                        <p class="text-sm opacity-80 mt-1">Very high impact on sleep</p>
+                    </div>
+                </div>
+                
+                <!-- Middle Column - Good/Bad Indicator -->
+                <div class="flex flex-col items-center justify-center">
+                    <div class="good-bad-indicator rounded-full flex items-center justify-center mb-6">
+                        <div class="rounded-full bg-gradient-to-br from-[#4E56C0] to-[#9B5DE0] w-[180px] h-[180px] flex items-center justify-center">
+                            <span class="text-3xl font-bold" id="sleep-quality">GOOD</span>
+                        </div>
+                    </div>
+                    <p class="text-center max-w-xs">Your sleep quality is better than 78% of people your age</p>
+                </div>
+                
+                <!-- Right Column - Recommendations -->
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-bold mb-6">Recommendations</h2>
+                    <div class="sleep-factor p-6">
+                        <div class="flex items-start">
+                            <i data-feather="moon" class="mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-2">Reduce Blue Light</h3>
+                                <p class="text-sm opacity-80">Avoid screens 1 hour before bed</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sleep-factor p-6">
+                        <div class="flex items-start">
+                            <i data-feather="coffee" class="mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-2">Limit Caffeine</h3>
+                                <p class="text-sm opacity-80">No caffeine after 2 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sleep-factor p-6">
+                        <div class="flex items-start">
+                            <i data-feather="activity" class="mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold mb-2">Exercise Regularly</h3>
+                                <p class="text-sm opacity-80">30 minutes daily improves sleep</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Generate input circles
+        const inputLabels = [
+            'Bedtime', 'Wake Time', 'Sleep Duration', 
+            'Caffeine Intake', 'Exercise', 'Stress Level', 
+            'Screen Time', 'Sleep Quality'
+        ];
+        const inputContainer = document.getElementById('input-circles');
+        
+        inputLabels.forEach((label, index) => {
+            const circle = document.createElement('div');
+            circle.className = 'input-circle rounded-full w-32 h-32 bg-white bg-opacity-20 backdrop-filter backdrop-blur-md flex flex-col items-center justify-center relative overflow-hidden';
+            circle.innerHTML = `
+                <span class="text-sm font-medium mb-1">${label}</span>
+                <span class="text-xs opacity-70 text-center px-2">Tap to input</span>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#4E56C0] to-[#9B5DE0]"></div>
+            `;
+            
+            circle.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Enter ${label}`;
+                input.className = 'w-full bg-transparent border-b border-white focus:outline-none text-center py-2 text-white placeholder-white placeholder-opacity-50';
+                
+                circle.innerHTML = '';
+                circle.appendChild(input);
+                input.focus();
+                
+                input.addEventListener('blur', () => {
+                    if (input.value) {
+                        circle.innerHTML = `
+                            <span class="text-sm font-medium mb-1">${label}</span>
+                            <span class="text-lg font-bold">${input.value}</span>
+                            <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#4E56C0] to-[#9B5DE0]"></div>
+                        `;
+                    } else {
+                        circle.innerHTML = `
+                            <span class="text-sm font-medium mb-1">${label}</span>
+                            <span class="text-xs opacity-70 text-center px-2">Tap to input</span>
+                            <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#4E56C0] to-[#9B5DE0]"></div>
+                        `;
+                    }
+                });
+                
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        input.blur();
+                    }
+                });
+            });
+            
+            inputContainer.appendChild(circle);
+        });
+
+        // Watch animation
+        function updateWatch() {
+            const now = new Date();
+            const hours = now.getHours() % 12;
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            
+            document.getElementById('hour-hand').style.transform = `rotate(${(hours * 30) + (minutes * 0.5)}deg)`;
+            document.getElementById('minute-hand').style.transform = `rotate(${minutes * 6}deg)`;
+            document.getElementById('second-hand').style.transform = `rotate(${seconds * 6}deg)`;
+        }
+        
+        setInterval(updateWatch, 1000);
+        updateWatch();
+
+        // Scroll animations
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Watch scale and move animation
+        ScrollTrigger.create({
+            trigger: "#page1",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true,
+            onUpdate: (self) => {
+                const watch = document.querySelector('.watch-face');
+                const scale = 1 - (self.progress * 0.8);
+                watch.style.transform = `scale(${scale}) rotate(${self.progress * 360}deg)`;
+                watch.style.opacity = 1 - (self.progress * 1.5);
+                
+                if (self.progress > 0.4) {
+                    document.querySelector('#page2').style.opacity = (self.progress - 0.4) * 2.5;
+                }
+                
+                if (self.progress > 0.8) {
+                    document.querySelector('#page3').style.opacity = (self.progress - 0.8) * 5;
+                }
+            }
+        });
+
+        // Initialize feather icons
+        document.addEventListener('DOMContentLoaded', () => {
+            feather.replace();
+        });
+    </script>
+</body>
+</html>

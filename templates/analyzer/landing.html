@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load static %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SleepIQ — AI-Powered Sleep Quality Analyzer</title>
+<meta name="description" content="Analyze your sleep quality using wearable sensor data and advanced machine learning. Get personalized insights and recommendations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<!-- ───── Ambient particles ───── -->
+<div class="particles" id="particles"></div>
+
+<!-- ───── NAV ───── -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="12" stroke="url(#lg)" stroke-width="2.5"/>
+          <path d="M8 14 Q11 8 14 14 Q17 20 20 14" stroke="url(#lg)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+        </svg>
+      </div>
+      <span class="logo-text">SleepIQ</span>
+    </div>
+    <div class="nav-pills">
+      <a href="#hero" class="nav-pill active">Home</a>
+      <a href="#features" class="nav-pill">Features</a>
+      <a href="#analyze" class="nav-pill">Analyze</a>
+    </div>
+    <div class="nav-badge">ML Powered · 94.9% Accuracy</div>
+  </div>
+</nav>
+
+<!-- ───── HERO ───── -->
+<section class="hero" id="hero">
+  <div class="hero-bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      AI Sleep Intelligence Platform
+    </div>
+    <h1 class="hero-title">
+      Decode Your<br>
+      <span class="gradient-text">Sleep Quality</span><br>
+      With Wearables
+    </h1>
+    <p class="hero-sub">Connect your smartwatch or simulate real sensor data. Our Gradient Boosting ML model — trained on 80,000 research-backed samples — predicts your sleep quality with <strong>94.9% accuracy</strong> and gives you actionable recommendations.</p>
+    <div class="hero-ctas">
+      <a href="#analyze" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Analyze My Sleep
+      </a>
+      <a href="#features" class="btn-ghost">Learn How It Works</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-val">94.9%</span><span class="stat-lbl">Model Accuracy</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-val">80K</span><span class="stat-lbl">Training Samples</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-val">13</span><span class="stat-lbl">Biometric Features</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="watch-container">
+      <div class="watch-glow"></div>
+      <div class="watch-body">
+        <div class="watch-screen">
+          <div class="watch-time" id="watch-time">00:00</div>
+          <div class="watch-metrics">
+            <div class="wm"><span class="wm-icon">❤️</span><span class="wm-val" id="w-hr">72</span><span class="wm-unit">bpm</span></div>
+            <div class="wm"><span class="wm-icon">🫁</span><span class="wm-val" id="w-spo2">97</span><span class="wm-unit">%</span></div>
+          </div>
+          <div class="watch-ring">
+            <svg viewBox="0 0 80 80" class="ring-svg">
+              <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+              <circle cx="40" cy="40" r="34" fill="none" stroke="url(#ringGrad)" stroke-width="6"
+                stroke-dasharray="213.6" stroke-dashoffset="53" stroke-linecap="round"
+                transform="rotate(-90 40 40)" id="ring-progress"/>
+              <defs>
+                <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#7C3AED"/>
+                  <stop offset="100%" stop-color="#06B6D4"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <span class="ring-label" id="w-eff">75%</span>
+          </div>
+          <div class="watch-label">Sleep Efficiency</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="#features" class="scroll-hint">
+    <div class="scroll-arrow"></div>
+  </a>
+</section>
+
+<!-- ───── FEATURES ───── -->
+<section class="features-section" id="features">
+  <div class="section-header">
+    <div class="section-badge">How It Works</div>
+    <h2 class="section-title">Research-Backed Sleep Science</h2>
+    <p class="section-sub">Every metric mapped to published sleep medicine research on PSQI, polysomnography, and wearable biosignals.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feat-icon" style="background:rgba(124,58,237,0.15);color:#7C3AED">❤️</div>
+      <h3>Heart Rate & HRV</h3>
+      <p>Resting heart rate is inversely correlated with sleep quality. Elevated nocturnal HR indicates autonomic dysregulation and poor recovery.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon" style="background:rgba(6,182,212,0.15);color:#06B6D4">🫁</div>
+      <h3>SpO₂ Monitoring</h3>
+      <p>Blood oxygen drops below 95% signal potential sleep-disordered breathing. Our model detects apnea risk patterns from SpO₂ trends.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon" style="background:rgba(16,185,129,0.15);color:#10B981">🌡️</div>
+      <h3>Skin Temperature</h3>
+      <p>Core body temperature drops 1-2°C during quality sleep. Distal skin warming (hands/feet) is a biomarker of healthy sleep onset.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon" style="background:rgba(245,158,11,0.15);color:#F59E0B">⚡</div>
+      <h3>EDA (Sweat Activity)</h3>
+      <p>Electrodermal activity reflects sympathetic nervous system arousal. High EDA before/during sleep disrupts NREM and REM architecture.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon" style="background:rgba(239,68,68,0.15);color:#EF4444">🏃</div>
+      <h3>Active Zone Minutes</h3>
+      <p>Moderate daily exercise increases slow-wave sleep by 15%. Our model factors in timing and intensity for accurate sleep scoring.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feat-icon" style="background:rgba(139,92,246,0.15);color:#8B5CF6">🤖</div>
+      <h3>Gradient Boosting ML</h3>
+      <p>GBM outperforms linear models on tabular biometric data. Trained on 80K realistic synthetic samples with stratified cross-validation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ───── ANALYSIS FORM ───── -->
+<section class="analyze-section" id="analyze">
+  <div class="section-header">
+    <div class="section-badge">Sleep Analysis</div>
+    <h2 class="section-title">Enter Your Wearable Data</h2>
+    <p class="section-sub">Use the simulation buttons to auto-fill from a realistic wearable, or enter your own smartwatch readings.</p>
+  </div>
+
+  {% if error %}
+  <div class="error-banner">⚠️ {{ error }}</div>
+  {% endif %}
+
+  <!-- Simulation Panel -->
+  <div class="sim-panel">
+    <div class="sim-header">
+      <div class="sim-icon">⌚</div>
+      <div>
+        <h3 class="sim-title">Wearable Simulator</h3>
+        <p class="sim-desc">Simulate data as if syncing a Fitbit / Apple Watch / Garmin</p>
+      </div>
+    </div>
+    <div class="sim-buttons">
+      <button class="sim-btn sim-poor" onclick="simulate('poor')">
+        <span class="sim-btn-icon">😴</span>
+        Poor Night
+      </button>
+      <button class="sim-btn sim-fair" onclick="simulate('fair')">
+        <span class="sim-btn-icon">😐</span>
+        Average Night
+      </button>
+      <button class="sim-btn sim-good" onclick="simulate('good')">
+        <span class="sim-btn-icon">😊</span>
+        Great Night
+      </button>
+      <button class="sim-btn sim-random" onclick="simulate('random')">
+        <span class="sim-btn-icon">🎲</span>
+        Randomize
+      </button>
+    </div>
+    <div class="sim-status" id="sim-status"></div>
+  </div>
+
+  <!-- Input Form -->
+  <form method="POST" action="{% url 'analyze' %}" class="analysis-form" id="mainForm">
+    {% csrf_token %}
+
+    <!-- Section: Vitals -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="fs-icon">💓</span>
+        <span class="fs-title">Biometric Vitals</span>
+        <span class="fs-desc">From your smartwatch sensors</span>
+      </div>
+      <div class="input-grid">
+        <div class="input-group" data-field="heart_rate">
+          <label>Heart Rate <span class="unit">bpm</span></label>
+          <div class="input-wrap">
+            <input type="number" name="heart_rate" id="heart_rate" step="0.1" min="40" max="120" placeholder="72" required>
+            <div class="input-bar"></div>
+            <span class="input-range">42 – 100 bpm</span>
+          </div>
+          <p class="field-hint">Resting night-time heart rate from wearable</p>
+        </div>
+        <div class="input-group" data-field="spo2">
+          <label>SpO₂ Level <span class="unit">%</span></label>
+          <div class="input-wrap">
+            <input type="number" name="spo2" id="spo2" step="0.1" min="85" max="100" placeholder="97" required>
+            <div class="input-bar"></div>
+            <span class="input-range">88 – 100%</span>
+          </div>
+          <p class="field-hint">Average blood oxygen during sleep</p>
+        </div>
+        <div class="input-group" data-field="skin_temperature">
+          <label>Skin Temperature <span class="unit">°C</span></label>
+          <div class="input-wrap">
+            <input type="number" name="skin_temperature" id="skin_temperature" step="0.01" min="32" max="37" placeholder="34.2" required>
+            <div class="input-bar"></div>
+            <span class="input-range">32.5 – 36.5°C</span>
+          </div>
+          <p class="field-hint">Wrist/finger skin temperature sensor</p>
+        </div>
+        <div class="input-group" data-field="eda">
+          <label>EDA / Sweat Activity <span class="unit">μS</span></label>
+          <div class="input-wrap">
+            <input type="number" name="eda" id="eda" step="0.01" min="0" max="15" placeholder="1.5" required>
+            <div class="input-bar"></div>
+            <span class="input-range">0.1 – 12.0 μS</span>
+          </div>
+          <p class="field-hint">Electrodermal activity (stress/arousal marker)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Activity & Lifestyle -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="fs-icon">🏃</span>
+        <span class="fs-title">Activity & Lifestyle</span>
+        <span class="fs-desc">Daily habits that influence sleep</span>
+      </div>
+      <div class="input-grid">
+        <div class="input-group" data-field="active_zone_min">
+          <label>Active Zone Minutes <span class="unit">min</span></label>
+          <div class="input-wrap">
+            <input type="number" name="active_zone_min" id="active_zone_min" min="0" max="200" placeholder="45" required>
+            <div class="input-bar"></div>
+            <span class="input-range">0 – 150 min</span>
+          </div>
+          <p class="field-hint">Elevated HR exercise today</p>
+        </div>
+        <div class="input-group" data-field="screen_time">
+          <label>Screen Time (Evening) <span class="unit">min</span></label>
+          <div class="input-wrap">
+            <input type="number" name="screen_time" id="screen_time" min="0" max="300" placeholder="90" required>
+            <div class="input-bar"></div>
+            <span class="input-range">0 – 240 min</span>
+          </div>
+          <p class="field-hint">Phone/TV after 8 PM</p>
+        </div>
+        <div class="input-group" data-field="screen_brightness">
+          <label>Screen Brightness <span class="unit">%</span></label>
+          <div class="input-wrap">
+            <input type="number" name="screen_brightness" id="screen_brightness" min="0" max="100" placeholder="60" required>
+            <div class="input-bar"></div>
+            <span class="input-range">0 – 100%</span>
+          </div>
+          <p class="field-hint">Average evening device brightness</p>
+        </div>
+        <div class="input-group" data-field="stress_score">
+          <label>Stress Management Score <span class="unit">/100</span></label>
+          <div class="input-wrap">
+            <input type="number" name="stress_score" id="stress_score" min="1" max="100" placeholder="65" required>
+            <div class="input-bar"></div>
+            <span class="input-range">1 – 100 (higher = calmer)</span>
+          </div>
+          <p class="field-hint">From Fitbit Sense / Garmin stress widget</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: Sleep Architecture -->
+    <div class="form-section">
+      <div class="form-section-header">
+        <span class="fs-icon">🌙</span>
+        <span class="fs-title">Sleep Architecture</span>
+        <span class="fs-desc">Wearable sleep tracking metrics</span>
+      </div>
+      <div class="input-grid">
+        <div class="input-group" data-field="sleep_efficiency">
+          <label>Sleep Efficiency <span class="unit">%</span></label>
+          <div class="input-wrap">
+            <input type="number" name="sleep_efficiency" id="sleep_efficiency" step="0.1" min="50" max="100" placeholder="82" required>
+            <div class="input-bar"></div>
+            <span class="input-range">55 – 99%</span>
+          </div>
+          <p class="field-hint">Time asleep ÷ time in bed × 100</p>
+        </div>
+        <div class="input-group" data-field="sleep_latency">
+          <label>Sleep Latency <span class="unit">min</span></label>
+          <div class="input-wrap">
+            <input type="number" name="sleep_latency" id="sleep_latency" min="1" max="120" placeholder="18" required>
+            <div class="input-bar"></div>
+            <span class="input-range">2 – 90 min</span>
+          </div>
+          <p class="field-hint">Minutes to fall asleep after lights-out</p>
+        </div>
+        <div class="input-group" data-field="waso">
+          <label>WASO <span class="unit">min</span></label>
+          <div class="input-wrap">
+            <input type="number" name="waso" id="waso" min="0" max="150" placeholder="20" required>
+            <div class="input-bar"></div>
+            <span class="input-range">0 – 90 min</span>
+          </div>
+          <p class="field-hint">Wake After Sleep Onset — nighttime awakenings</p>
+        </div>
+        <div class="input-group" data-field="rem_pct">
+          <label>REM Sleep <span class="unit">%</span></label>
+          <div class="input-wrap">
+            <input type="number" name="rem_pct" id="rem_pct" step="0.1" min="5" max="40" placeholder="21" required>
+            <div class="input-bar"></div>
+            <span class="input-range">10 – 35%</span>
+          </div>
+          <p class="field-hint">Rapid Eye Movement sleep proportion</p>
+        </div>
+        <div class="input-group" data-field="deep_pct">
+          <label>Deep Sleep <span class="unit">%</span></label>
+          <div class="input-wrap">
+            <input type="number" name="deep_pct" id="deep_pct" step="0.1" min="5" max="35" placeholder="16" required>
+            <div class="input-bar"></div>
+            <span class="input-range">5 – 28%</span>
+          </div>
+          <p class="field-hint">Slow-wave (NREM stage 3) proportion</p>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">
+      <span class="submit-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        Analyze My Sleep Quality
+      </span>
+      <div class="submit-loader" id="submitLoader"></div>
+    </button>
+  </form>
+</section>
+
+<!-- ───── FOOTER ───── -->
+<footer class="footer">
+  <p>SleepIQ — Built with Django &amp; Gradient Boosting ML · Based on PSQI Research &amp; Wearable Biosignal Studies</p>
+</footer>
+
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load static %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Sleep Report — SleepIQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="{% static 'css/result.css' %}">
+</head>
+<body class="result-page">
+
+<div class="particles" id="particles"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="12" stroke="url(#lg2)" stroke-width="2.5"/>
+          <path d="M8 14 Q11 8 14 14 Q17 20 20 14" stroke="url(#lg2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <defs><linearGradient id="lg2" x1="0" y1="0" x2="28" y2="28"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+        </svg>
+      </div>
+      <span class="logo-text">SleepIQ</span>
+    </a>
+    <a href="/" class="btn-ghost" style="padding:8px 20px;font-size:0.88rem">← New Analysis</a>
+  </div>
+</nav>
+
+<!-- HERO RESULT -->
+<section class="result-hero">
+  <div class="rh-orbs">
+    <div class="orb orb-1" style="background:{{ data.colors.primary }}44"></div>
+    <div class="orb orb-2" style="background:{{ data.colors.secondary }}33"></div>
+  </div>
+
+  <div class="result-hero-content">
+    <p class="result-eyebrow">Your Sleep Quality Report</p>
+
+    <!-- Big dial -->
+    <div class="result-dial-wrap">
+      <svg class="result-dial" viewBox="0 0 220 220">
+        <!-- Track -->
+        <circle cx="110" cy="110" r="90" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="18"/>
+        <!-- Animated arc -->
+        <circle cx="110" cy="110" r="90" fill="none"
+          stroke="url(#dialGrad)" stroke-width="18"
+          stroke-dasharray="565.5"
+          stroke-dashoffset="{% if data.label_idx == 2 %}100{% elif data.label_idx == 1 %}280{% else %}450{% endif %}"
+          stroke-linecap="round"
+          transform="rotate(-90 110 110)"
+          class="dial-arc" id="dialArc"
+          data-target="{% if data.label_idx == 2 %}100{% elif data.label_idx == 1 %}280{% else %}450{% endif %}"/>
+        <defs>
+          <linearGradient id="dialGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="{{ data.colors.primary }}"/>
+            <stop offset="100%" stop-color="{{ data.colors.secondary }}"/>
+          </linearGradient>
+        </defs>
+        <!-- Label -->
+        <text x="110" y="95" text-anchor="middle" fill="white" font-size="36" font-weight="800" font-family="Inter">{{ data.label }}</text>
+        <text x="110" y="122" text-anchor="middle" fill="rgba(255,255,255,0.55)" font-size="13" font-family="Inter">Sleep Quality</text>
+      </svg>
+    </div>
+
+    <!-- Probability bars -->
+    <div class="prob-bars">
+      <div class="prob-item">
+        <span class="prob-label">Poor</span>
+        <div class="prob-track">
+          <div class="prob-fill prob-poor" style="width:{{ data.proba.Poor }}%"></div>
+        </div>
+        <span class="prob-pct">{{ data.proba.Poor }}%</span>
+      </div>
+      <div class="prob-item">
+        <span class="prob-label">Fair</span>
+        <div class="prob-track">
+          <div class="prob-fill prob-fair" style="width:{{ data.proba.Fair }}%"></div>
+        </div>
+        <span class="prob-pct">{{ data.proba.Fair }}%</span>
+      </div>
+      <div class="prob-item">
+        <span class="prob-label">Good</span>
+        <div class="prob-track">
+          <div class="prob-fill prob-good" style="width:{{ data.proba.Good }}%"></div>
+        </div>
+        <span class="prob-pct">{{ data.proba.Good }}%</span>
+      </div>
+    </div>
+
+    <p class="result-insight">{{ data.insight }}</p>
+  </div>
+</section>
+
+<!-- METRICS GRID -->
+<section class="metrics-section">
+  <h2 class="section-title" style="text-align:center;margin-bottom:2rem">Your Biometric Snapshot</h2>
+  <div class="metrics-grid">
+    {% with inp=data.inputs %}
+    <div class="metric-card {% if inp.heart_rate > 80 %}metric-warn{% elif inp.heart_rate < 60 %}metric-good{% else %}metric-ok{% endif %}">
+      <div class="mc-icon">❤️</div>
+      <div class="mc-val">{{ inp.heart_rate }}</div>
+      <div class="mc-unit">bpm</div>
+      <div class="mc-label">Heart Rate</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:{% widthratio inp.heart_rate 100 100 %}%"></div></div>
+    </div>
+    <div class="metric-card {% if inp.spo2 >= 95 %}metric-good{% elif inp.spo2 >= 90 %}metric-ok{% else %}metric-warn{% endif %}">
+      <div class="mc-icon">🫁</div>
+      <div class="mc-val">{{ inp.spo2 }}</div>
+      <div class="mc-unit">%</div>
+      <div class="mc-label">SpO₂</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:{{ inp.spo2 }}%"></div></div>
+    </div>
+    <div class="metric-card {% if inp.sleep_efficiency >= 85 %}metric-good{% elif inp.sleep_efficiency >= 72 %}metric-ok{% else %}metric-warn{% endif %}">
+      <div class="mc-icon">🌙</div>
+      <div class="mc-val">{{ inp.sleep_efficiency }}</div>
+      <div class="mc-unit">%</div>
+      <div class="mc-label">Sleep Efficiency</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:{{ inp.sleep_efficiency }}%"></div></div>
+    </div>
+    <div class="metric-card {% if inp.sleep_latency <= 15 %}metric-good{% elif inp.sleep_latency <= 30 %}metric-ok{% else %}metric-warn{% endif %}">
+      <div class="mc-icon">⏱️</div>
+      <div class="mc-val">{{ inp.sleep_latency }}</div>
+      <div class="mc-unit">min</div>
+      <div class="mc-label">Sleep Latency</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:{% widthratio inp.sleep_latency 90 100 %}%"></div></div>
+    </div>
+    <div class="metric-card {% if inp.waso <= 20 %}metric-good{% elif inp.waso <= 45 %}metric-ok{% else %}metric-warn{% endif %}">
+      <div class="mc-icon">😤</div>
+      <div class="mc-val">{{ inp.waso }}</div>
+      <div class="mc-unit">min</div>
+      <div class="mc-label">WASO</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:{% widthratio inp.waso 90 100 %}%"></div></div>
+    </div>
+    <div class="metric-card {% if inp.rem_pct >= 18 %}metric-good{% elif inp.rem_pct >= 12 %}metric-ok{% else %}metric-warn{% endif %}">
+      <div class="mc-icon">💭</div>
+      <div class="mc-val">{{ inp.rem_pct }}</div>
+      <div class="mc-unit">%</div>
+      <div class="mc-label">REM Sleep</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:{% widthratio inp.rem_pct 35 100 %}%"></div></div>
+    </div>
+    <div class="metric-card {% if inp.deep_pct >= 13 %}metric-good{% elif inp.deep_pct >= 8 %}metric-ok{% else %}metric-warn{% endif %}">
+      <div class="mc-icon">🔵</div>
+      <div class="mc-val">{{ inp.deep_pct }}</div>
+      <div class="mc-unit">%</div>
+      <div class="mc-label">Deep Sleep</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:{% widthratio inp.deep_pct 28 100 %}%"></div></div>
+    </div>
+    <div class="metric-card {% if inp.stress_score >= 65 %}metric-good{% elif inp.stress_score >= 40 %}metric-ok{% else %}metric-warn{% endif %}">
+      <div class="mc-icon">🧠</div>
+      <div class="mc-val">{{ inp.stress_score }}</div>
+      <div class="mc-unit">/100</div>
+      <div class="mc-label">Stress Score</div>
+      <div class="mc-bar"><div class="mc-fill" style="width:{{ inp.stress_score }}%"></div></div>
+    </div>
+    {% endwith %}
+  </div>
+</section>
+
+<!-- SLEEP STAGE DONUT -->
+<section class="stage-section">
+  <h2 class="section-title" style="text-align:center;margin-bottom:2rem">Sleep Stage Breakdown</h2>
+  <div class="stage-visual">
+    <div class="donut-wrap">
+      {% with inp=data.inputs %}
+      {% with light=100|add:"-"|add:inp.rem_pct|add:"-"|add:inp.deep_pct %}
+      <svg viewBox="0 0 160 160" class="donut-svg">
+        <!-- Deep sleep: teal -->
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#06B6D4" stroke-width="28"
+          stroke-dasharray="376.99"
+          stroke-dashoffset="{{ inp.deep_pct|floatformat:0 }}"
+          transform="rotate(-90 80 80)" opacity="0.9"/>
+        <!-- REM: purple -->
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#7C3AED" stroke-width="28"
+          stroke-dasharray="376.99"
+          stroke-dashoffset="{{ inp.rem_pct|floatformat:0 }}"
+          transform="rotate({{ inp.deep_pct }}deg 80 80)" opacity="0.9"/>
+        <!-- Light: dim -->
+        <circle cx="80" cy="80" r="60" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="28"/>
+        <text x="80" y="76" text-anchor="middle" fill="white" font-size="14" font-weight="700">Sleep</text>
+        <text x="80" y="92" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="11">Stages</text>
+      </svg>
+      {% endwith %}
+      {% endwith %}
+    </div>
+    <div class="stage-legend">
+      <div class="stage-item">
+        <div class="stage-dot" style="background:#06B6D4"></div>
+        <span class="stage-name">Deep Sleep (NREM 3)</span>
+        <span class="stage-val">{{ data.inputs.deep_pct }}%</span>
+        <p class="stage-desc">Physical restoration, immune function, memory consolidation</p>
+      </div>
+      <div class="stage-item">
+        <div class="stage-dot" style="background:#7C3AED"></div>
+        <span class="stage-name">REM Sleep</span>
+        <span class="stage-val">{{ data.inputs.rem_pct }}%</span>
+        <p class="stage-desc">Emotional regulation, learning, creativity processing</p>
+      </div>
+      <div class="stage-item">
+        <div class="stage-dot" style="background:rgba(255,255,255,0.2)"></div>
+        <span class="stage-name">Light Sleep (NREM 1&2)</span>
+        <span class="stage-val">Remainder</span>
+        <p class="stage-desc">Transition stages between wakefulness and deeper sleep</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDATIONS -->
+<section class="recs-section">
+  <h2 class="section-title" style="text-align:center;margin-bottom:0.5rem">Personalized Recommendations</h2>
+  <p class="section-sub" style="text-align:center;margin-bottom:2.5rem">Tailored to your <strong>{{ data.label }}</strong> sleep quality profile</p>
+  <div class="recs-grid">
+    {% for rec in data.recommendations %}
+    <div class="rec-card" style="animation-delay: {{ forloop.counter0 }}00ms">
+      <div class="rec-icon">{{ rec.icon }}</div>
+      <h3 class="rec-title">{{ rec.title }}</h3>
+      <p class="rec-desc">{{ rec.desc }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="result-cta">
+  <h2>Track Your Progress</h2>
+  <p>Run another analysis after implementing these recommendations to measure improvement.</p>
+  <a href="/" class="btn-primary">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    Analyze Again
+  </a>
+</section>
+
+<footer class="footer">
+  <p>SleepIQ — Powered by Gradient Boosting ML · 94.9% Accuracy · Based on PSQI &amp; Wearable Research</p>
+</footer>
+
+<script src="{% static 'js/result.js' %}"></script>
+</body>
+</html>
